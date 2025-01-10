@@ -1,4 +1,7 @@
 from dataclasses import dataclass
+import csv
+import logging
+import sys
 from dataclasses import dataclass, fields, astuple
 from urllib.parse import urljoin
 
@@ -14,6 +17,19 @@ class Quote:
     text: str
     author: str
     tags: list[str]
+
+
+QUOTE_FIELDS = [fild.name for fild in fields(Quote)]
+
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="[%(levelname)8s]: %(message)s)",
+    handlers=[
+        logging.FileHandler("parser.log"),
+        logging.StreamHandler(sys.stdout),
+    ]
+)
 
 
 def parse_single_product(quote: Tag) -> Quote:
