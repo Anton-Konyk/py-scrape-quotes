@@ -17,6 +17,11 @@ def parse_single_product(quote: Tag) -> Quote:
     )
 
 
+def get_single_page_quotes(pages_soup: Tag) -> [Quote]:
+    quote = pages_soup.select(".quote")
+    return [parse_single_product(product) for product in quote]
+
+
 def main(output_csv_path: str) -> None:
     pass
 
