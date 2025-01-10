@@ -45,6 +45,14 @@ def get_all_page_quotes() -> [Quote]:
 
     return all_quotes
 
+
+def write_quotes_to_csv(output_csv_path: str, quotes: [Quote]) -> None:
+    with open(output_csv_path, "w", newline="", encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(QUOTE_FIELDS)
+        writer.writerows([astuple(quote) for quote in quotes])
+
+
 def main(output_csv_path: str) -> None:
     write_quotes_to_csv(output_csv_path, get_all_page_quotes())
 
