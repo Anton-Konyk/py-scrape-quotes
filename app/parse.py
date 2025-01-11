@@ -1,3 +1,4 @@
+import ast
 import csv
 import logging
 import sys
@@ -32,10 +33,15 @@ logging.basicConfig(
 
 
 def parse_single_product(quote: Tag) -> Quote:
+    tags_element = quote.select_one(".keywords")
+    if tags_element and tags_element["content"]:
+        tags = tags_element["content"].split(",")
+    else:
+        tags = []
     return Quote(
         text=quote.select_one(".text").text,  # text
         author=quote.select_one(".author").text,
-        tags=quote.select_one(".keywords")["content"].split(","),
+        tags=tags,
     )
 
 
