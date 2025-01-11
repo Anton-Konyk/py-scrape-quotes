@@ -1,10 +1,12 @@
 import csv
+import json
 import logging
 import sys
 from dataclasses import dataclass, fields, astuple
 from urllib.parse import urljoin
 
 import requests
+import redis
 from bs4 import BeautifulSoup, Tag
 
 
@@ -32,6 +34,18 @@ logging.basicConfig(
 )
 
 
+redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
+
+
+def get_author_bio(author, author_bio_path):
+    cached_bio = redis_client.get(author)
+    if cached_bio:
+        print(f"Using cached data for {author}")
+        return json.loads(cached_bio)
+
+    bio = fetch_biography_from_source(author_bio_path)
+    redis_client.setex(author, 86400, json.dumps(bio))
+    return bio
 def parse_single_product(quote: Tag) -> Quote:
     tags_element = quote.select_one(".keywords")
     author = quote.select_one(".author").text
