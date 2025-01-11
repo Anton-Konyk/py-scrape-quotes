@@ -46,6 +46,26 @@ def get_author_bio(author, author_bio_path):
     bio = fetch_biography_from_source(author_bio_path)
     redis_client.setex(author, 86400, json.dumps(bio))
     return bio
+
+
+def fetch_biography_from_source(author_bio_path):
+    text = requests.get(author_bio_path).content
+    bio_page_soup = BeautifulSoup(text, "html.parser")
+    bio = ""
+    if bio_page_soup.find('strong', string="Born: "):
+        bio = bio_page_soup.find('strong', string="Born:").get_text()
+    if bio_page_soup.select_one(".author-born-date"):
+        bio += bio_page_soup.select_one(".author-born-date").text
+    if bio_page_soup.select_one(".author-born-location"):
+        bio += " " + bio_page_soup.select_one(".author-born-location").text
+    if bio_page_soup.find('strong', string="Description:"):
+        bio += "\n" + bio_page_soup.find('strong', string="Description: ").get_text()
+    if bio_page_soup.select_one(".author-description"):
+        bio += " " + bio_page_soup.select_one(".author-description").text
+
+    return bio
+
+
 def parse_single_product(quote: Tag) -> Quote:
     tags_element = quote.select_one(".keywords")
     author = quote.select_one(".author").text
