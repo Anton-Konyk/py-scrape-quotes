@@ -164,7 +164,9 @@ def write_author_bio_to_csv(output_csv_path: str, authors: [Author]) -> None:
 
 
 def main(output_csv_path: str) -> None:
-    write_quotes_to_csv(output_csv_path, get_all_page_quotes())
+    result = get_all_page_quotes()
+    write_quotes_to_csv(output_csv_path, result[0])
+    write_author_bio_to_csv(output_csv_path, result[1])
 
 
 if __name__ == "__main__":
