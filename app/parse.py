@@ -117,8 +117,9 @@ def parse_single_author_bio(quote: Tag) -> Author:
 
 
 def get_single_page_quotes(pages_soup: Tag) -> [Quote]:
-    quote = pages_soup.select(".quote")
-    return [parse_single_product(product) for product in quote]
+    quotes = pages_soup.select(".quote")
+    return [parse_single_product(quote) for quote in quotes]
+
 
 def get_author_page_bio(pages_soup: Tag) -> [Author]:
     quotes = pages_soup.select(".quote")
