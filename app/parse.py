@@ -110,6 +110,9 @@ def get_single_page_quotes(pages_soup: Tag) -> [Quote]:
     quote = pages_soup.select(".quote")
     return [parse_single_product(product) for product in quote]
 
+def get_author_page_bio(pages_soup: Tag) -> [Author]:
+    quotes = pages_soup.select(".quote")
+    return [parse_single_author_bio(quote) for quote in quotes]
 
 def get_all_page_quotes() -> [Quote]:
     logging.info("Starting parsing first page")
