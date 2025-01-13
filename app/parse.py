@@ -29,6 +29,9 @@ class Author:
     bio: str
 
 
+AUTHOR_FIELDS = [fild.name for fild in fields(Author)]
+
+
 logging.basicConfig(
     level=logging.DEBUG,
     format="[%(levelname)8s]: %(message)s)",
@@ -84,6 +87,22 @@ def parse_single_product(quote: Tag) -> Quote:
         text=quote.select_one(".text").text,  # text
         author=author,
         tags=tags,
+    )
+
+
+def parse_single_author_bio(quote: Tag) -> Author:
+    author = quote.select_one(".author").text
+    bio_path = quote.select_one('a[href*="/author/"]')['href']
+
+    if bio_path:
+        author_bio_path = urljoin(BASE_URL, bio_path)
+        bio = get_author_bio(author, author_bio_path)
+    else:
+        bio = ""
+
+    return Author(
+        author=author,
+        bio=bio,
     )
 
 
