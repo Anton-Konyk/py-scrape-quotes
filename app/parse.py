@@ -42,18 +42,16 @@ logging.basicConfig(
     ]
 )
 
-
-redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
+author_bio_cache = {}
 
 
 def get_author_bio(author: str, author_bio_path: str) -> str:
-    cached_bio = redis_client.get(author)
-    if cached_bio:
+    if author in author_bio_cache:
         print(f"Using cached data for {author}")
-        return json.loads(cached_bio)
+        return author_bio_cache[author]
 
     bio = fetch_biography_from_source(author_bio_path)
-    redis_client.setex(author, 86400, json.dumps(bio))
+    author_bio_cache[author] = bio
     return bio
 
 # cash by Redis
