@@ -125,11 +125,13 @@ def get_author_page_bio(pages_soup: Tag) -> [Author]:
     quotes = pages_soup.select(".quote")
     return [parse_single_author_bio(quote) for quote in quotes]
 
-def get_all_page_quotes() -> [Quote]:
+
+def get_all_page_quotes() -> ([Quote], [Author]):
     logging.info("Starting parsing first page")
     text = requests.get(BASE_URL).content
     first_page_soup = BeautifulSoup(text, "html.parser")
     all_quotes = get_single_page_quotes(first_page_soup)
+    all_authors = get_author_page_bio(first_page_soup)
     next_page = first_page_soup.select("li.next a")
     while next_page:
         logging.info(f"Starting parsing first page {next_page[0]["href"].strip('/').split('/')[1]}")
@@ -137,9 +139,10 @@ def get_all_page_quotes() -> [Quote]:
         text = requests.get(next_page_url).content
         next_page_soup = BeautifulSoup(text, "html.parser")
         all_quotes.extend(get_single_page_quotes(next_page_soup))
+        all_authors.extend(get_author_page_bio(next_page_soup))
         next_page = next_page_soup.select("li.next a")
 
-    return all_quotes
+    return all_quotes, all_authors
 
 
 def write_quotes_to_csv(output_csv_path: str, quotes: [Quote]) -> None:
