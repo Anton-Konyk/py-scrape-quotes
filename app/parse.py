@@ -135,8 +135,8 @@ def get_all_page_quotes() -> ([Quote], [Author]):
     all_authors = get_author_page_bio(first_page_soup)
     next_page = first_page_soup.select("li.next a")
     while next_page:
-        logging.info(f"Starting parsing first page "
-                     f"{next_page[0]["href"].strip('/').split('/')[1]}")
+        logging.info(f"Starting parsing first "
+                     f"page {next_page[0]["href"].strip('/').split('/')[1]}")
         next_page_url = urljoin(BASE_URL, next_page[0]["href"])
         text = requests.get(next_page_url).content
         next_page_soup = BeautifulSoup(text, "html.parser")
