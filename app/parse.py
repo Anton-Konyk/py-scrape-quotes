@@ -60,16 +60,26 @@ def fetch_biography_from_source(author_bio_path):
     text = requests.get(author_bio_path).content
     bio_page_soup = BeautifulSoup(text, "html.parser")
     bio = ""
-    if bio_page_soup.find('strong', string="Born: "):
-        bio = bio_page_soup.find('strong', string="Born:").get_text()
-    if bio_page_soup.select_one(".author-born-date"):
-        bio += bio_page_soup.select_one(".author-born-date").text
-    if bio_page_soup.select_one(".author-born-location"):
-        bio += " " + bio_page_soup.select_one(".author-born-location").text
-    if bio_page_soup.find('strong', string="Description:"):
-        bio += "\n" + bio_page_soup.find('strong', string="Description: ").get_text()
-    if bio_page_soup.select_one(".author-description"):
-        bio += " " + bio_page_soup.select_one(".author-description").text
+
+    born_element = bio_page_soup.find('strong', string="Born: ")
+    if born_element:
+        bio = born_element.get_text()
+
+    date_element = bio_page_soup.select_one(".author-born-date")
+    if date_element:
+        bio += date_element.text
+
+    born_element = bio_page_soup.select_one(".author-born-location")
+    if born_element:
+        bio += " " + born_element.text
+
+    description_element = bio_page_soup.find('strong', string="Description:")
+    if description_element:
+        bio += "\n" + description_element.get_text()
+
+    author_element = bio_page_soup.select_one(".author-description")
+    if author_element:
+        bio += " " + author_element.text
 
     return bio
 
