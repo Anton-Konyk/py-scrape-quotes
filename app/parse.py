@@ -18,10 +18,15 @@ class Quote:
     text: str
     author: str
     tags: list[str]
-    bio: str
 
 
 QUOTE_FIELDS = [fild.name for fild in fields(Quote)]
+
+
+@dataclass
+class Author:
+    author: str
+    bio: str
 
 
 logging.basicConfig(
@@ -69,13 +74,6 @@ def fetch_biography_from_source(author_bio_path):
 def parse_single_product(quote: Tag) -> Quote:
     tags_element = quote.select_one(".keywords")
     author = quote.select_one(".author").text
-    bio_path = quote.select_one('a[href*="/author/"]')['href']
-
-    if bio_path:
-        author_bio_path = urljoin(BASE_URL, bio_path)
-        bio = get_author_bio(author, author_bio_path)
-    else:
-        bio = ""
 
     if tags_element and tags_element["content"]:
         tags = tags_element["content"].split(",")
@@ -86,7 +84,6 @@ def parse_single_product(quote: Tag) -> Quote:
         text=quote.select_one(".text").text,  # text
         author=author,
         tags=tags,
-        bio=bio,
     )
 
 
