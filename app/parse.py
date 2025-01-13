@@ -1,12 +1,10 @@
 import csv
-import json
 import logging
 import sys
 from dataclasses import dataclass, fields, astuple
 from urllib.parse import urljoin
 
 import requests
-import redis
 from bs4 import BeautifulSoup, Tag
 
 
