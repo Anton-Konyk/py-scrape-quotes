@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup, Tag
 
 
 BASE_URL = "https://quotes.toscrape.com/"
+SUFFIX = "_bio"
 
 
 @dataclass
@@ -150,6 +151,16 @@ def write_quotes_to_csv(output_csv_path: str, quotes: [Quote]) -> None:
         writer = csv.writer(f)
         writer.writerow(QUOTE_FIELDS)
         writer.writerows([astuple(quote) for quote in quotes])
+
+
+def write_author_bio_to_csv(output_csv_path: str, authors: [Author]) -> None:
+    name, ext = output_csv_path.rsplit('.', 1)
+    bio_filename = f"{name}{SUFFIX}.{ext}"
+    with open(bio_filename, "w", newline="", encoding='utf-8') as f:
+
+        writer = csv.writer(f)
+        writer.writerow(AUTHOR_FIELDS)
+        writer.writerows([astuple(author) for author in authors])
 
 
 def main(output_csv_path: str) -> None:
