@@ -46,7 +46,7 @@ logging.basicConfig(
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 
-def get_author_bio(author, author_bio_path):
+def get_author_bio(author: str, author_bio_path: str) -> str:
     cached_bio = redis_client.get(author)
     if cached_bio:
         print(f"Using cached data for {author}")
@@ -57,7 +57,7 @@ def get_author_bio(author, author_bio_path):
     return bio
 
 
-def fetch_biography_from_source(author_bio_path):
+def fetch_biography_from_source(author_bio_path: str) -> str:
     text = requests.get(author_bio_path).content
     bio_page_soup = BeautifulSoup(text, "html.parser")
     bio = ""
