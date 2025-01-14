@@ -52,21 +52,6 @@ def get_author_bio(author: str, author_bio_path: str) -> str:
     author_bio_cache[author] = bio
     return bio
 
-# cash by Redis
-
-# redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
-
-
-# def get_author_bio(author: str, author_bio_path: str) -> str:
-#     cached_bio = redis_client.get(author)
-#     if cached_bio:
-#         print(f"Using cached data for {author}")
-#         return json.loads(cached_bio)
-#
-#     bio = fetch_biography_from_source(author_bio_path)
-#     redis_client.setex(author, 86400, json.dumps(bio))
-#     return bio
-
 
 def fetch_biography_from_source(author_bio_path: str) -> str:
     text = requests.get(author_bio_path).content
